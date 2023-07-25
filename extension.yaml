@@ -1,0 +1,8 @@
+title: Hello World
+version: 0.0.1
+description: Hello world extension
+author: Shinta Liem
+origin: https://github.com/shinta-liem/omni-extension-template.git
+client:
+  addToWorkbench: true
+  hideBackButton: true
