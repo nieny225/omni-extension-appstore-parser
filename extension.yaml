@@ -1,8 +1,10 @@
-title: Hello World
+title: Google Play & App Store Scraper
 version: 0.0.1
-description: Hello world extension
-author: Shinta Liem
-origin: https://github.com/shinta-liem/omni-extension-template.git
+description: An Omnitool extension for parsing Appstore/Google Play information
+author: nieny225
+origin: https://github.com/nieny225/omni-extension-appstore-parser
 client:
   addToWorkbench: true
-  hideBackButton: true
+dependencies:
+  app-store-scraper: app-store-scraper@latest
+  google-play-scraper: google-play-scraper@latest
