@@ -1,8 +1,68 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        body {
+          font-family: ui-sans-serif, system-ui, -apple-system, "system-ui", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+          background-color: #F1F5F8;
+          padding: 20px; /* Add padding around the text */
+        }
+        h1 {
+          color: #303030;
+        }
+        .category {
+          color: #303030;
+          font-weight: bold;
+        }
+        
+        .description, .actions .count{
+          /* margin-left: 10px; */
+          font-size: 1em;
+          text-align: justify; /* Justify the text alignment */
+          line-height: 1.5; /* Increase the line height */
+        }
+        .count {
+          color: #eaa504;
+          font-weight: bold;
+        }
+        .actions {
+          color: #3647c8;
+          font-weight: bold;
+        }
+      </style>
+
+  <script>
+    function displayText() {
+  const messages = window.parent.client.chat.state.messages;
+  
+  // Assuming messages are objects with a 'text' property
+  // Select the latest message
+  let text = messages[messages.length - 1].text;
+
+  const sections = text.split('\n\n');
+  let htmlContent = '';
+
+  sections.forEach((section, index) => {
+  const [header, description, actions] = section.split('\n');
+  const [category, count] = header.split('][').map(item => item.replace('[', '').replace(']', ''));
+
+    htmlContent += `
+        <h1 class="category">${category}</h1>
+        <div class="count">${count}</div>
+        <div class="description">${description}</div>
+        <div class="actions">${actions}</div>
+        <br/>
+    `;
+    }); 
+
+  document.getElementById('content').innerHTML = htmlContent;
+}
+
+    window.onload = displayText;
+  </script>
+
 </head>
 <body>
-    <h1 x-data="{ message: 'Google Play & App Store Scraper' }" x-text="message"></h1>
+  <div id="content"></div>
 </body>
 </html>

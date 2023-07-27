@@ -34,10 +34,11 @@ const GooglePlayReviewsBlock = {
             },
             "sort": {
               "title": 'Sort By',
-              "type": 'integer',
+              "type": 'string',
+              "x-type": 'text',
               "description": 'The way the reviews are going to be sorted.',
-              "default": 2,
-              "enum": [2, 3, 1]
+              "default": "Newest",
+              "enum": ["Newest", "Rating", "Helpfulness"]
             },
             "num": {
               "title": 'Number of Reviews',
@@ -98,15 +99,15 @@ const GooglePlayReviewsBlock = {
         },
         inputs: {
          // TODO: This doesn't work as the value type will mismatch with integer. Will need to check again in new component system  
-          "sort": {
-            // "type": 'number',
-            "default": 2,
-            "choices": [
-                {"title": "Newest", "value": 2},
-                {"title": "Rating", "value": 3},
-                {"title": "Helpfulness", "value": 1}
-            ],
-          },
+          // "sort": {
+          //   "type": 'number',
+          //   "default": 2,
+          //   "choices": [
+          //       {"title": "Newest", "value": 2},
+          //       {"title": "Rating", "value": 3},
+          //       {"title": "Helpfulness", "value": 1}
+          //   ]
+          // },
           "lang": {
             "default": 'en-US',
             "choices": [
@@ -314,11 +315,23 @@ const GooglePlayReviewsBlock = {
       }
       
     },
-    "functions": {
+    "functions": {  
       "_exec": async (payload, ctx) => {
-        omnilog.log(`[nicklog] Payload: ${payload}`);
         // payload.sort = parseInt(payload.sort, 10);
-        omnilog.log(`[nicklog] Payload.sort: ${payload.sort}`);
+        switch (payload.sort) {
+          case 'Newest':
+            payload.sort = 2;
+            break;
+          case 'Rating':
+            payload.sort = 3;
+            break;
+          case 'Helpfulness':
+            payload.sort = 1;
+            break;
+          default:
+            // Handle the case where payload.sort is not one of the expected values
+            throw new Error(`Invalid sort value: ${payload.sort}`);
+        }
         const reviews = await gplay.reviews(payload);
         return reviews;
       }
