@@ -35,7 +35,6 @@ const GooglePlayReviewsBlock = {
             "sort": {
               "title": 'Sort By',
               "type": 'integer',
-              "x-type": 'number',
               "description": 'The way the reviews are going to be sorted.',
               "default": 2,
               "enum": [2, 3, 1]
@@ -100,14 +99,13 @@ const GooglePlayReviewsBlock = {
         inputs: {
          // TODO: This doesn't work as the value type will mismatch with integer. Will need to check again in new component system  
           "sort": {
-            "type": 'integer',
-            "x-type": 'number',
+            // "type": 'number',
             "default": 2,
             "choices": [
                 {"title": "Newest", "value": 2},
                 {"title": "Rating", "value": 3},
                 {"title": "Helpfulness", "value": 1}
-            ]
+            ],
           },
           "lang": {
             "default": 'en-US',
@@ -318,6 +316,9 @@ const GooglePlayReviewsBlock = {
     },
     "functions": {
       "_exec": async (payload, ctx) => {
+        omnilog.log(`[nicklog] Payload: ${payload}`);
+        // payload.sort = parseInt(payload.sort, 10);
+        omnilog.log(`[nicklog] Payload.sort: ${payload.sort}`);
         const reviews = await gplay.reviews(payload);
         return reviews;
       }
@@ -559,6 +560,11 @@ const AppleStoreReviewsBlock = {
     },
     "functions": {
       "_exec": async (payload, ctx) => {
+        if (!isNaN(payload.appId)) {
+            // If it's a number, assign it to the id field
+            payload.id = parseInt(payload.appId, 10);
+            delete payload.appId;
+        }
         const reviews = await store.reviews(payload);
         return reviews;
       }

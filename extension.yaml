@@ -6,5 +6,5 @@ origin: https://github.com/nieny225/omni-extension-appstore-parser
 client:
   addToWorkbench: true
 dependencies:
-  app-store-scraper: app-store-scraper@latest
-  google-play-scraper: google-play-scraper@latest
+  app-store-scraper: 'app-store-scraper'
+  google-play-scraper: 'google-play-scraper'
