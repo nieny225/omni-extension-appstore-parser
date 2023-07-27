@@ -10,21 +10,24 @@
         h1 {
           color: #303030;
         }
-        .category {
-          color: #303030;
-          font-weight: bold;
-        }
-        
-        .description, .actions .count{
-          /* margin-left: 10px; */
-          font-size: 1em;
-          text-align: justify; /* Justify the text alignment */
-          line-height: 1.5; /* Increase the line height */
+        .category-section {
+            padding-left: 20px;
         }
         .count {
           color: #eaa504;
           font-weight: bold;
         }
+        .category {
+          color: #303030;
+          font-weight: bold;
+        }
+        .description, .actions .count{
+          /* margin-left: 10px; */
+          font-size: 1em;
+          /* text-align: justify;  */
+          line-height: 1.5; /* Increase the line height */
+        }
+  
         .actions {
           color: #3647c8;
           font-weight: bold;
@@ -33,30 +36,38 @@
 
   <script>
     function displayText() {
-  const messages = window.parent.client.chat.state.messages;
-  
-  // Assuming messages are objects with a 'text' property
-  // Select the latest message
-  let text = messages[messages.length - 1].text;
+      const messages = window.parent.client.chat.state.messages;
 
-  const sections = text.split('\n\n');
-  let htmlContent = '';
+      // Select the latest message
+      let text = messages[messages.length - 1].text;
 
-  sections.forEach((section, index) => {
-  const [header, description, actions] = section.split('\n');
-  const [category, count] = header.split('][').map(item => item.replace('[', '').replace(']', ''));
+      // Remove HTML tags and parse JSON
+      const data = JSON.parse(text.replace(/<\/?p>/g, ''));
 
-    htmlContent += `
-        <h1 class="category">${category}</h1>
-        <div class="count">${count}</div>
-        <div class="description">${description}</div>
-        <div class="actions">${actions}</div>
-        <br/>
-    `;
-    }); 
+      let htmlContent = '';
 
-  document.getElementById('content').innerHTML = htmlContent;
-}
+      data.forEach((section, index) => {
+          const {Category, Count, Summary, Actions} = section;
+
+          // Convert the Summary array into a single string of paragraphs
+          const summaryHtml = Summary.map(summary => `<p>${summary}</p>`).join('');
+
+          htmlContent += `
+            
+              <h1 class="category">Category: ${Category}</h1>
+              <div class="category-section">
+                  <div class="count">Count: ${Count}</div>
+                  <h2>Insight:</h2>
+                  <div class="description">${summaryHtml}</div>
+                  <h2>Action Items:</h2>
+                  <div class="actions">${Actions}</div>
+              </div>
+              <br/>
+          `;
+      });
+
+      document.getElementById('content').innerHTML = htmlContent;
+  }
 
     window.onload = displayText;
   </script>
