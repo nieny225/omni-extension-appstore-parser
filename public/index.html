@@ -11,7 +11,12 @@
           color: #303030;
         }
         .category-section {
-            padding-left: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px; /* Optional for rounded corners */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Optional for a shadow effect */
+            margin-bottom: 20px; /* Space between cards */
+            background-color: #f9f9f9; /* Optional for a background color */
         }
         .count {
           color: #eaa504;
@@ -33,47 +38,92 @@
           font-weight: bold;
         }
       </style>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     function displayText() {
       const messages = window.parent.client.chat.state.messages;
-
+  
       // Select the latest message
       let text = messages[messages.length - 1].text;
-
+  
       // Remove HTML tags and parse JSON
       const data = JSON.parse(text.replace(/<\/?p>/g, ''));
-
+  
       let htmlContent = '';
-
+      let labels = [];
+      let counts = [];
+  
       data.forEach((section, index) => {
-          const {Category, Count, Summary, Actions} = section;
-
-          // Convert the Summary array into a single string of paragraphs
-          const summaryHtml = Summary.map(summary => `<p>${summary}</p>`).join('');
-
-          htmlContent += `
-            
-              <h1 class="category">Category: ${Category}</h1>
-              <div class="category-section">
-                  <div class="count">Count: ${Count}</div>
-                  <h2>Insight:</h2>
-                  <div class="description">${summaryHtml}</div>
-                  <h2>Action Items:</h2>
-                  <div class="actions">${Actions}</div>
-              </div>
-              <br/>
-          `;
+        const { Category, Count, Summary, Actions } = section;
+  
+        // Convert the Summary array into a single string of paragraphs
+        const summaryHtml = Summary.map(summary => `<p>${summary}</p>`).join('');
+  
+        htmlContent += `
+          <div class="category-section">
+            <h1 class="category">Category: ${Category}</h1>
+            <div class="count">Count: ${Count}</div>
+            <h2>Insight:</h2>
+            <div class="description">${summaryHtml}</div>
+            <h2>Action Items:</h2>
+            <div class="actions">${Actions}</div>
+          </div>
+          <br/>
+        `;
+  
+        // Collect data for the chart
+        labels.push(Category);
+        counts.push(Count);
       });
-
+  
       document.getElementById('content').innerHTML = htmlContent;
-  }
-
+  
+      // Create the pie chart
+      var ctx = document.getElementById('myChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        options: {
+          responsive: false,
+          maintainAspectRatio: true,
+          legend: {
+            position: 'right', // places the legend on the right of the chart
+            align: 'center', // centers the legend in the vertical axis
+          }
+        },
+        data: {
+          labels: labels,
+          datasets: [{
+            data: counts,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',   // You can choose your own colors
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+      });
+    }
+  
     window.onload = displayText;
   </script>
 
 </head>
 <body>
+  <div style="display: flex; justify-content: center; margin-bottom: 50px;">
+    <canvas id="myChart"></canvas>
+  </div>
   <div id="content"></div>
 </body>
 </html>
