@@ -2,7 +2,7 @@ title: Google Play & App Store Scraper
 version: 0.0.1
 description: An Omnitool extension for parsing Appstore/Google Play information
 author: nieny225
-origin: https://github.com/nieny225/omni-extension-appstore-parser
+origin: https://github.com/nieny225/omni-extension-appstore-parser.git
 client:
   addToWorkbench: true
 dependencies:
