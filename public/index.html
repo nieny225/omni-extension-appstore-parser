@@ -10,6 +10,17 @@
         h1 {
           color: #303030;
         }
+        #refreshBtn {
+          position: fixed;
+          top: 10px;
+          left: 10px;
+          padding: 10px;
+          font-size: 16px;
+          color: #303030;
+          background-color: #f9f9f9;
+          border: 1px solid #ccc;
+          cursor: pointer;
+        }
         .category-section {
             padding: 20px;
             border: 1px solid #ccc;
@@ -39,6 +50,7 @@
         }
       </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script>
     function displayText() {
       const messages = window.parent.client.chat.state.messages;
@@ -76,6 +88,7 @@
         counts.push(Count);
       });
   
+      document.getElementById('refreshBtn').addEventListener('click', displayText);
       document.getElementById('content').innerHTML = htmlContent;
   
       // Create the pie chart
@@ -121,6 +134,7 @@
 
 </head>
 <body>
+  <button id="refreshBtn"><i class="fas fa-sync-alt"></i></button>
   <div style="display: flex; justify-content: center; margin-bottom: 50px;">
     <canvas id="myChart"></canvas>
   </div>
