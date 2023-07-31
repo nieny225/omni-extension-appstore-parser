@@ -52,14 +52,24 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script>
+    let myChart;
     function displayText() {
       const messages = window.parent.client.chat.state.messages;
   
       // Select the latest message
       let text = messages[messages.length - 1].text;
-  
-      // Remove HTML tags and parse JSON
-      const data = JSON.parse(text.replace(/<\/?p>/g, ''));
+      let data;
+      try {
+        // Remove HTML tags and parse JSON
+        data = JSON.parse(text.replace(/<\/?p>/g, ''));
+
+      } catch (error) {
+        if (error instanceof SyntaxError) {
+          alert('There was an error parsing the JSON data: ' + error.message + '. Please try refreshing the content.');
+        } else {
+          throw error;  // re-throw the error unchanged
+        }
+      }
   
       let htmlContent = '';
       let labels = [];
@@ -88,12 +98,16 @@
         counts.push(Count);
       });
   
-      document.getElementById('refreshBtn').addEventListener('click', displayText);
       document.getElementById('content').innerHTML = htmlContent;
   
-      // Create the pie chart
+      // Get the context for the chart
       var ctx = document.getElementById('myChart').getContext('2d');
-      new Chart(ctx, {
+      // Check if the chart exists already
+      if (myChart) {
+        // If it does, destroy it
+        myChart.destroy();
+      }
+      myChart = new Chart(ctx, {
         type: 'pie',
         options: {
           responsive: false,
@@ -128,8 +142,12 @@
         },
       });
     }
-  
-    window.onload = displayText;
+    window.onload = function() {
+      // Add event listener to refresh button
+      document.getElementById('refreshBtn').addEventListener('click', displayText);
+      // Display initial text
+      displayText();
+    }
   </script>
 
 </head>
