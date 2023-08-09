@@ -5,6 +5,8 @@ author: nieny225
 origin: https://github.com/nieny225/omni-extension-appstore-parser.git
 client:
   addToWorkbench: true
-dependencies:
-  app-store-scraper: 'app-store-scraper'
-  google-play-scraper: 'google-play-scraper'
+supports:
+  - "blocks:v2"
+# dependencies:
+#   app-store-scraper: 'app-store-scraper'
+#   google-play-scraper: 'google-play-scraper'
