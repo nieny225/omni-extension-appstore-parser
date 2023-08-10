@@ -12584,7 +12584,16 @@ var OAIBaseComponent = class extends Rete2.Component {
 import gplay from "google-play-scraper";
 import store from "app-store-scraper";
 var NS_OMNI = "appstore-parser";
-var component = OAIBaseComponent.create(NS_OMNI, "google-play-reviews").fromScratch().set("description", "Extracts reviews from Google Play Store for a specific application.").set("title", "Google Play Reviews").set("category", "Data Extraction").setMethod("X-CUSTOM");
+var component = OAIBaseComponent.create(NS_OMNI, "google-play-reviews").fromScratch().set("description", "Extracts reviews from Google Play Store for a specific application.").set("title", "Google Play Reviews").set("category", "Data Extraction").setMethod("X-CUSTOM").setMeta({
+  source: {
+    summary: "Extracts reviews from Google Play Store for a specific application.",
+    authors: ["Mercenaries.ai Team"],
+    links: {
+      "Google Play Scraper Github": "https://github.com/facundoolano/google-play-scraper",
+      "Google Play Store": "https://play.google.com/store"
+    }
+  }
+});
 component.addInput(
   component.createInput("appId", "string").set("description", "Unique application id for Google Play.").setRequired(true).toOmniIO()
 ).addInput(
@@ -12809,9 +12818,17 @@ component.addInput(
   return reviews;
 });
 var GooglePlayReviewsComponent = component.toJSON();
-component = OAIBaseComponent.create(NS_OMNI, "apple-store-reviews").fromScratch().set("description", "Extracts reviews from Apple Store for a specific application.").set("title", "Apple Store Reviews").set("category", "Data Extraction").setMethod("X-CUSTOM");
+component = OAIBaseComponent.create(NS_OMNI, "apple-store-reviews").fromScratch().set("description", "Extracts reviews from Apple Store for a specific application.").set("title", "Apple Store Reviews").set("category", "Data Extraction").setMethod("X-CUSTOM").setMeta({
+  "source": {
+    "summary": "Extracts reviews from Apple Store for a specific application.",
+    links: {
+      "App Store Scraper Github": "https://github.com/facundoolano/app-store-scraper",
+      "Apple Store": "https://www.apple.com/app-store/"
+    }
+  }
+});
 component.addInput(
-  component.createInput("appId", "string").set("description", "Unique application id for Apple Store.").setRequired(true).toOmniIO()
+  component.createInput("appId", "string").set("description", "Unique application id for Apple Store. Either iTune trackId or appId.").toOmniIO()
 ).addInput(
   component.createInput("country", "string").set("description", "The two-letter country code to get the reviews from.").setChoices([
     { "title": "Albania", "value": "al" },
@@ -12968,6 +12985,7 @@ component.addInput(
   if (!isNaN(payload.appId)) {
     payload.id = parseInt(payload.appId, 10);
     delete payload.appId;
+  } else {
   }
   const reviews = await store.reviews(payload);
   return reviews;

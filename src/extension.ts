@@ -10,7 +10,17 @@ let component = OAIBaseComponent.create(NS_OMNI, 'google-play-reviews')
   .set('description', 'Extracts reviews from Google Play Store for a specific application.')
   .set('title', 'Google Play Reviews')
   .set('category', 'Data Extraction')
-  .setMethod('X-CUSTOM');
+  .setMethod('X-CUSTOM')
+  .setMeta({
+    source: {
+        summary: 'Extracts reviews from Google Play Store for a specific application.',
+        authors: ['Mercenaries.ai Team'],
+        links: {
+            "Google Play Scraper Github": "https://github.com/facundoolano/google-play-scraper",
+            "Google Play Store": "https://play.google.com/store"
+        }
+    }
+})
 component
   .addInput(
     component.createInput('appId', 'string')
@@ -230,10 +240,10 @@ component
     component.createInput('sort', 'string')
       .set('description', 'The way the reviews are going to be sorted.')
       .setChoices([
-        { title: 'Newest', value: 2 },
-        { title: 'Rating', value: 3 },
-        { title: 'Helpfulness', value: 1 }
-      ], 2)
+        { title: 'Newest', value: gplay.sort.NEWEST },
+        { title: 'Rating', value: gplay.sort.RATING },
+        { title: 'Helpfulness', value: gplay.sort.HELPFULNESS }
+      ], gplay.sort.NEWEST)
       .toOmniIO()
   )
   .addInput(
@@ -275,11 +285,20 @@ component = OAIBaseComponent.create(NS_OMNI, 'apple-store-reviews')
   .set('description', 'Extracts reviews from Apple Store for a specific application.')
   .set('title', 'Apple Store Reviews')
   .set('category', 'Data Extraction')
-  .setMethod('X-CUSTOM');
+  .setMethod('X-CUSTOM')
+  .setMeta({ 
+        "source": {
+          "summary": "Extracts reviews from Apple Store for a specific application.",
+          links: {
+            "App Store Scraper Github": "https://github.com/facundoolano/app-store-scraper",
+            "Apple Store": "https://www.apple.com/app-store/"
+          }
+        }
+    })         
 component
   .addInput(
     component.createInput('appId', 'string')
-      .set('description', 'Unique application id for Apple Store.')
+      .set('description', 'Unique application id for Apple Store. Either iTune trackId or appId.')
       .setRequired(true)
       .toOmniIO()
   )
@@ -437,13 +456,13 @@ component
     component.createInput('page', 'integer')
       .set('description', 'The review page number to retrieve. Defaults to 1, maximum allowed is 10.')
       .setDefault(1)
+      .setConstraints(1, 10)
       .toOmniIO()
   )
   .addInput(
     component.createInput('sort', 'string')
       .set('description', 'The review sort order.')
-      .setDefault('mostRecent')
-      .setChoices(['mostRecent', 'mostHelpful'], 'mostRecent')
+      .setChoices([store.sort.RECENT, store.sort.HELPFUL], store.sort.RECENT)
       .toOmniIO()
   )
   .addOutput(
@@ -453,8 +472,10 @@ component
   )
   .setMacro(OmniComponentMacroTypes.EXEC, async (payload: any, ctx: WorkerContext) => {
     if (!isNaN(payload.appId)) {
-      payload.id = parseInt(payload.appId, 10);
-      delete payload.appId;
+        payload.id = parseInt(payload.appId, 10);
+        delete payload.appId; // Remove the appId field if it's numeric10742001
+    } else {
+    // If it's not numeric, it's assumed to be a bundle string and will remain in payload.appId
     }
     const reviews = await store.reviews(payload);
     return reviews;
