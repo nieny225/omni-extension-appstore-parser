@@ -265,13 +265,13 @@ component
       .toOmniIO()
   )
   .addOutput(
-    component.createOutput('data', 'array')
-      .set('description', 'The reviews data')
+    component.createOutput('nextPaginationToken', 'string')
+      .set('description', 'The next token to paginate')
       .toOmniIO()
   )
   .addOutput(
-    component.createOutput('nextPaginationToken', 'string')
-      .set('description', 'The next token to paginate')
+    component.createOutput('reviews', 'array', 'objectArray')
+      .set('description', 'The reviews data')
       .toOmniIO()
   )
   .setMacro(OmniComponentMacroTypes.EXEC, async (payload: any, ctx: WorkerContext) => {
@@ -466,11 +466,10 @@ component
       .toOmniIO()
   )
   .addOutput(
-    component.createOutput('data', 'array')
+    component.createOutput('data', 'array', 'objectArray')
       .set('description', 'The reviews data')
       .toOmniIO()
-  )
-  .setMacro(OmniComponentMacroTypes.EXEC, async (payload: any, ctx: WorkerContext) => {
+  ).setMacro(OmniComponentMacroTypes.EXEC, async (payload: any, ctx: WorkerContext) => {
     if (!isNaN(payload.appId)) {
         payload.id = parseInt(payload.appId, 10);
         delete payload.appId; // Remove the appId field if it's numeric10742001

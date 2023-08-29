@@ -98834,9 +98834,9 @@ component.addInput(
 ).addInput(
   component.createInput("nextPaginationToken", "string").set("description", "The next token to paginate").setDefault(null).toOmniIO()
 ).addOutput(
-  component.createOutput("data", "array").set("description", "The reviews data").toOmniIO()
-).addOutput(
   component.createOutput("nextPaginationToken", "string").set("description", "The next token to paginate").toOmniIO()
+).addOutput(
+  component.createOutput("reviews", "array", "objectArray").set("description", "The reviews data").toOmniIO()
 ).setMacro(OmniComponentMacroTypes.EXEC, async (payload, ctx) => {
   const reviews2 = await google_play_scraper_default.reviews(payload);
   return reviews2;
@@ -99004,7 +99004,7 @@ component.addInput(
 ).addInput(
   component.createInput("sort", "string").set("description", "The review sort order.").setChoices([import_app_store_scraper.default.sort.RECENT, import_app_store_scraper.default.sort.HELPFUL], import_app_store_scraper.default.sort.RECENT).toOmniIO()
 ).addOutput(
-  component.createOutput("data", "array").set("description", "The reviews data").toOmniIO()
+  component.createOutput("data", "array", "objectArray").set("description", "The reviews data").toOmniIO()
 ).setMacro(OmniComponentMacroTypes.EXEC, async (payload, ctx) => {
   if (!isNaN(payload.appId)) {
     payload.id = parseInt(payload.appId, 10);
