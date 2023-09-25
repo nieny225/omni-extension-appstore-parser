@@ -1,4 +1,4 @@
-import { OAIBaseComponent, WorkerContext, OmniComponentMacroTypes } from 'mercs_rete';
+import { OAIBaseComponent, WorkerContext, OmniComponentMacroTypes } from 'omni-sockets'
 import gplay from 'google-play-scraper';
 import store from 'app-store-scraper';
 

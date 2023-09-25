@@ -18,7 +18,7 @@ const buildOptions_fix = {
       bundle : true,
       entryPoints: ['./extension.js'],
       outfile: '../server/extension.js',
-      external: ['mercs_rete'],
+      external: ['omni-sockets'],
       loader: {
         '.node': 'binary',
       },  
@@ -32,7 +32,7 @@ const buildOptions_good = {
   format: 'esm',
   platform: 'node',
   target: 'es2020',
-  external: ['mercs_rete'], // Add other options as needed
+  external: ['omni-sockets'], // Add other options as needed
   loader: {
     '.node': 'binary',
   },  
